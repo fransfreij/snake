@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 import pygame
+from constants import *
 
 
-class Snake():
+class Snake:
     def __init__(self):
         self.alive = False
         self.health = 50
@@ -11,60 +12,65 @@ class Snake():
         self.left = 0
         self.up = 0
         self.down = 0
+        self.snake_size = 60
 
     def draw(self, window):
-        pygame.draw.rect(window, (255, 255, 255), self.snake)
+        if not self.snake:
+            print("No snake object created...")
+
+        pygame.draw.rect(window, constants['GREEN'], self.snake)
 
     def create_snake(self):
-        self.snake = pygame.Rect(0, 0, 60, 60)
+        self.snake = pygame.Rect(0, 0, self.snake_size, self.snake_size)
         self.alive = True
+
+    def on_collide(self):
+        pass
+
+    def tail(self):
+        pass
+
+    def increase_size(self):
+        # size += 1
+        pass
 
     def on_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                self.right = 0
-                self.left = 1
-                self.up = 0
-                self.down = 0
+                self.direction_state(0, 1, 0, 0)
 
             if event.key == pygame.K_RIGHT:
-                self.right = 1
-                self.left = 0
-                self.up = 0
-                self.down = 0
+                self.direction_state(1, 0, 0, 0)
 
             if event.key == pygame.K_UP:
-                self.right = 0
-                self.left = 0
-                self.up = 1
-                self.down = 0
+                self.direction_state(0, 0, 1, 0)
 
             if event.key == pygame.K_DOWN:
-                self.right = 0
-                self.left = 0
-                self.up = 0
-                self.down = 1
+                self.direction_state(0, 0, 0, 1)
 
     def update(self):
-        print(self.snake.y)
         if self.left == 1:
             if self.snake.x < 0:
                 self.health = 0
+                print("Hit left wall")
             self.snake.x -= 4
 
         if self.right == 1:
-            if self.snake.x >= 500 - 50:
+            if self.snake.x >= constants['WIDTH'] - self.snake_size:
                 self.health = 0
+                print("Hit right wall")
             self.snake.x += 4
 
         if self.up == 1:
-            if self.snake.y <= -50:
+            if self.snake.y <= -(self.snake_size):
                 self.health = 0
+                print("Hit upper wall")
             self.snake.y -= 4
 
         if self.down == 1:
-            if self.snake.y >= 500 - 50:
+            if self.snake.y >= constants['HEIGHT'] - self.snake_size:
                 self.health = 0
+                print("Hit lower wall")
             self.snake.y += 4
 
     def do_damage(self, damage):
@@ -75,3 +81,9 @@ class Snake():
             self.alive = False
 
         return self.alive
+
+    def direction_state(self, right, left, up, down):
+        self.right = right
+        self.left = left
+        self.up = up
+        self.down = down

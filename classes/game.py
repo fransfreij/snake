@@ -2,11 +2,13 @@
 import pygame
 from constants import *
 from classes.snake import Snake
+from classes.apple import Apple
 
 
-class Game():
+class Game:
     def __init__(self, running):
         self.running = running
+        self.entities = []
 
     def create_window(self):
         try:
@@ -34,13 +36,22 @@ class Game():
 
         self.snake.on_event(event)
 
+    def create_snake(self):
+        self.snake = Snake()
+        self.snake.create_snake()
+        self.entities.append(self.snake)
+
+    def create_apple(self):
+        self.apple = Apple()
+        self.apple.create_apple()
+        self.entities.append(self.apple)
+
     def run(self):
         self.create_clock()
         self.create_window()
 
-        self.snake = Snake()
-
-        self.snake.create_snake()
+        self.create_snake()
+        self.create_apple()
 
         while self.running:
             for event in pygame.event.get():
@@ -48,8 +59,12 @@ class Game():
 
             self.clock.tick(constants['FPS'])
             self.window.fill(constants['BLACK'])
-            self.snake.draw(self.window)
+
+            for entity in self.entities:
+                entity.draw(self.window)
+
             self.snake.update()
+
             if not self.snake.is_alive():
                 self.quit()
 
