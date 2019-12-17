@@ -57,7 +57,7 @@ class Game:
         while self.running:
             for event in pygame.event.get():
                 self.on_event(event)
-
+            # a comment
             self.clock.tick(constants['FPS'])
             self.window.fill(constants['BLACK'])
 
