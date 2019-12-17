@@ -9,6 +9,7 @@ class Game:
     def __init__(self, running):
         self.running = running
         self.entities = []
+        self.spawn_timer = 5
 
     def create_window(self):
         try:
@@ -65,8 +66,17 @@ class Game:
 
             self.snake.update()
 
+            # print(len(self.entities))
+            if self.snake.snake.colliderect(self.apple.apple):
+                self.apple.alive = False
+
             if not self.snake.is_alive():
                 self.quit()
+
+            if self.clock.get_time() / 1000 >= self.spawn_timer:
+                self.create_apple()
+
+            print(self.clock.get_time() / 1000)
 
             self.update_window()
 
