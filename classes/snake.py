@@ -13,6 +13,7 @@ class Snake:
         self.up = 0
         self.down = 0
         self.snake_size = 60
+        self.size = 0
 
     def draw(self, window):
         if not self.snake:
@@ -24,15 +25,17 @@ class Snake:
         self.snake = pygame.Rect(0, 0, self.snake_size, self.snake_size)
         self.alive = True
 
-    def on_collide(self):
-        pass
+    def on_collide(self, apple):
+        if self.snake.colliderect(apple.apple):
+            return True
 
     def tail(self):
         pass
 
     def increase_size(self):
-        # size += 1
-        pass
+        self.size += 1
+        print(self.size)
+        return self.size
 
     def on_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -47,6 +50,10 @@ class Snake:
 
             if event.key == pygame.K_DOWN:
                 self.direction_state(0, 0, 0, 1)
+
+            if event.key == pygame.K_ESCAPE:
+                # quit
+                pass
 
     def update(self):
         if self.left == 1:

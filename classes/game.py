@@ -8,8 +8,9 @@ from classes.apple import Apple
 class Game:
     def __init__(self, running):
         self.running = running
-        self.entities = []
         self.spawn_timer = 5
+        self.counter = 0
+        self.apples = []
 
     def create_window(self):
         try:
@@ -40,12 +41,11 @@ class Game:
     def create_snake(self):
         self.snake = Snake()
         self.snake.create_snake()
-        self.entities.append(self.snake)
 
     def create_apple(self):
-        self.apple = Apple()
-        self.apple.create_apple()
-        self.entities.append(self.apple)
+        apple = Apple()
+        apple.create_apple()
+        self.apples.append(apple)
 
     def run(self):
         self.create_clock()
@@ -57,27 +57,35 @@ class Game:
         while self.running:
             for event in pygame.event.get():
                 self.on_event(event)
-            # a comment
+
             self.clock.tick(constants['FPS'])
             self.window.fill(constants['BLACK'])
 
-            for entity in self.entities:
-                entity.draw(self.window)
+            # collisions
+            for apple in self.apples:
+                if self.snake.on_collide(apple):
+                    self.apples.remove(apple)
+                    self.snake.increase_size()
 
-            self.snake.update()
+            # draw
+            self.snake.draw(self.window)
+            for apple in self.apples:
+                apple.draw(self.window)
 
-            # print(len(self.entities))
-            if self.snake.snake.colliderect(self.apple.apple):
-                self.apple.alive = False
-
+            # check if snake is alive
             if not self.snake.is_alive():
+                print("Game over")
                 self.quit()
 
-            if self.clock.get_time() / 1000 >= self.spawn_timer:
+            # spawn timer logic
+            if pygame.time.get_ticks() / 1000 >= self.spawn_timer:
                 self.create_apple()
+                self.spawn_timer += 5
+                self.counter += 1
+            # print(pygame.time.get_ticks() / 1000)
 
-            print(self.clock.get_time() / 1000)
-
+            # updates
+            self.snake.update()
             self.update_window()
 
     def quit(self):

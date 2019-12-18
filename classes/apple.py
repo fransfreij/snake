@@ -36,5 +36,7 @@ class Apple:
         if not self.apple:
             print("no apple object")
 
-        if self.alive:
-            pygame.draw.rect(window, constants['RED'], self.apple)
+        pygame.draw.rect(window, constants['RED'], self.apple)
+
+    def is_alive(self):
+        return self.alive
