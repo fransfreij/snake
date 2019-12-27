@@ -14,12 +14,13 @@ class Snake:
         self.down = 0
         self.snake_size = 60
         self.size = 0
+        self.tails = []
 
     def draw(self, window):
-        if not self.snake:
-            print("No snake object created...")
-
         pygame.draw.rect(window, constants['GREEN'], self.snake)
+
+        for tail in self.tails:
+            pygame.draw.rect(window, constants['GREEN'], tail)
 
     def create_snake(self):
         self.snake = pygame.Rect(0, 0, self.snake_size, self.snake_size)
@@ -29,12 +30,12 @@ class Snake:
         if self.snake.colliderect(apple.apple):
             return True
 
-    def tail(self):
-        pass
-
     def increase_size(self):
         self.size += 1
-        print(self.size)
+        print(len(self.tails))
+        tail = pygame.Rect(self.snake.centerx, self.snake.centery, 20, 20)
+        self.tails.append(tail)
+
         return self.size
 
     def on_event(self, event):
@@ -50,10 +51,6 @@ class Snake:
 
             if event.key == pygame.K_DOWN:
                 self.direction_state(0, 0, 0, 1)
-
-            if event.key == pygame.K_ESCAPE:
-                # quit
-                pass
 
     def update(self):
         if self.left == 1:
@@ -79,6 +76,10 @@ class Snake:
                 self.health = 0
                 print("Hit lower wall")
             self.snake.y += 4
+
+        for tail in self.tails:
+            tail.x = self.snake.centerx + 30
+            tail.y = self.snake.centery
 
     def do_damage(self, damage):
         self.health = self.health - damage
