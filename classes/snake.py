@@ -7,63 +7,79 @@ from constants import *
 class Snake:
     def __init__(self):
         self.alive = False
+        self.current_direction = None
         self.health = 50
         self.right = 1
         self.left = 0
         self.up = 0
         self.down = 0
         self.snake_size = 60
-        self.size = 0
-        self.tails = []
+
+        self.snake_list = []
 
     def draw(self, window):
-        pygame.draw.rect(window, constants['GREEN'], self.snake)
-
-        for tail in self.tails:
-            pygame.draw.rect(window, constants['GREEN'], tail)
+        for snake in self.snake_list:
+            pygame.draw.rect(window, constants['GREEN'], snake)
 
     def create_snake(self):
         self.snake = pygame.Rect(0, 0, self.snake_size, self.snake_size)
         self.alive = True
+        self.snake_list.insert(0, self.snake)
 
     def on_collide(self, apple):
-        if self.snake.colliderect(apple.apple):
-            return True
+        for snake in self.snake_list:
+            if snake.colliderect(apple.get_rect()):
+                return True
 
     def increase_size(self):
-        self.size += 1
-        print(len(self.tails))
-        tail = pygame.Rect(self.snake.centerx, self.snake.centery, 20, 20)
-        self.tails.append(tail)
 
-        return self.size
+        current_snake_pos = []
+        current_snake_pos.append(self.snake_list[0].x)
+        current_snake_pos.append(self.snake_list[0].y)
+        print(current_snake_pos)
+
+        test = pygame.Rect(
+            current_snake_pos[0], current_snake_pos[1], self.snake_size, self.snake_size)
+        self.snake_list.insert(len(self.snake_list), test)
 
     def on_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 self.direction_state(0, 1, 0, 0)
+                self.current_direction = "LEFT"
 
             if event.key == pygame.K_RIGHT:
                 self.direction_state(1, 0, 0, 0)
+                self.current_direction = "RIGHT"
 
             if event.key == pygame.K_UP:
                 self.direction_state(0, 0, 1, 0)
+                self.current_direction = "UP"
 
             if event.key == pygame.K_DOWN:
                 self.direction_state(0, 0, 0, 1)
+                self.current_direction = "DOWN"
 
     def update(self):
         if self.left == 1:
+            for snake in self.snake_list:
+                if snake.x < 0:
+                    self.health = 0
+                snake.x -= 4
+            """
             if self.snake.x < 0:
                 self.health = 0
                 print("Hit left wall")
             self.snake.x -= 4
+            """
 
         if self.right == 1:
-            if self.snake.x >= constants['WIDTH'] - self.snake_size:
-                self.health = 0
-                print("Hit right wall")
-            self.snake.x += 4
+            for snake in self.snake_list:
+                if snake.x >= constants['WIDTH'] - self.snake_size:
+
+                    self.health = 0
+                    print("Hit right wall")
+                snake.x += 4
 
         if self.up == 1:
             if self.snake.y <= -(self.snake_size):
@@ -77,9 +93,7 @@ class Snake:
                 print("Hit lower wall")
             self.snake.y += 4
 
-        for tail in self.tails:
-            tail.x = self.snake.centerx + 30
-            tail.y = self.snake.centery
+        print(self.current_direction)
 
     def do_damage(self, damage):
         self.health = self.health - damage

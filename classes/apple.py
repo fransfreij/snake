@@ -40,3 +40,6 @@ class Apple:
 
     def is_alive(self):
         return self.alive
+
+    def get_rect(self):
+        return self.apple
