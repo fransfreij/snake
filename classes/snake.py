@@ -3,109 +3,56 @@
 import pygame
 from constants import *
 
+LEFT = "LEFT"
+RIGHT = "RIGHT"
+UP = "UP"
+DOWN = "DOWN"
+
 
 class Snake:
-    def __init__(self):
-        self.alive = False
-        self.current_direction = None
-        self.health = 50
-        self.right = 1
-        self.left = 0
-        self.up = 0
-        self.down = 0
-        self.snake_size = 60
-
+    def __init__(self, x, y):
+        self.start_x = x
+        self.start_y = y
         self.snake_list = []
+        self.is_alive = True
+        self.reset()
 
     def draw(self, window):
         for snake in self.snake_list:
             pygame.draw.rect(window, constants['GREEN'], snake)
 
-    def create_snake(self):
-        self.snake = pygame.Rect(0, 0, self.snake_size, self.snake_size)
-        self.alive = True
-        self.snake_list.insert(0, self.snake)
+    def reset(self):
+        self.snake_list = []
+        self.direction = 'LEFT'
 
-    def on_collide(self, apple):
-        for snake in self.snake_list:
-            if snake.colliderect(apple.get_rect()):
-                return True
+        for i in range(0, 4):
+            self.snake_list.append((self.start_x, self.start_y + i))
 
-    def increase_size(self):
+    def change_direction(self, direction):
+        if self.direction == "UP" and direction == "DOWN":
+            return
 
-        current_snake_pos = []
-        current_snake_pos.append(self.snake_list[0].x)
-        current_snake_pos.append(self.snake_list[0].y)
-        print(current_snake_pos)
+        if self.direction == "DOWN" and direction == "UP":
+            return
 
-        test = pygame.Rect(
-            current_snake_pos[0], current_snake_pos[1], self.snake_size, self.snake_size)
-        self.snake_list.insert(len(self.snake_list), test)
+        if self.direction == "LEFT" and direction == "RIGHT":
+            return
 
-    def on_event(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                self.direction_state(0, 1, 0, 0)
-                self.current_direction = "LEFT"
+        if self.direction == "RIGHT" and direction == "LEFT":
+            return
 
-            if event.key == pygame.K_RIGHT:
-                self.direction_state(1, 0, 0, 0)
-                self.current_direction = "RIGHT"
+        self.direction = direction
 
-            if event.key == pygame.K_UP:
-                self.direction_state(0, 0, 1, 0)
-                self.current_direction = "UP"
+    def get_head(self):
+        return self.snake_list[0]
 
-            if event.key == pygame.K_DOWN:
-                self.direction_state(0, 0, 0, 1)
-                self.current_direction = "DOWN"
+    def get_tail(self):
+        return self.snake_list[len(self.snake_list)-1]
 
-    def update(self):
-        if self.left == 1:
-            for snake in self.snake_list:
-                if snake.x < 0:
-                    self.health = 0
-                snake.x -= 4
-            """
-            if self.snake.x < 0:
-                self.health = 0
-                print("Hit left wall")
-            self.snake.x -= 4
-            """
-
-        if self.right == 1:
-            for snake in self.snake_list:
-                if snake.x >= constants['WIDTH'] - self.snake_size:
-
-                    self.health = 0
-                    print("Hit right wall")
-                snake.x += 4
-
-        if self.up == 1:
-            if self.snake.y <= -(self.snake_size):
-                self.health = 0
-                print("Hit upper wall")
-            self.snake.y -= 4
-
-        if self.down == 1:
-            if self.snake.y >= constants['HEIGHT'] - self.snake_size:
-                self.health = 0
-                print("Hit lower wall")
-            self.snake.y += 4
-
-        print(self.current_direction)
-
-    def do_damage(self, damage):
-        self.health = self.health - damage
+    def grow(self):
+        (tx, ty) = self.get_tail()
+        tail = ()
+        print(tail)
 
     def is_alive(self):
-        if self.health <= 0:
-            self.alive = False
-
-        return self.alive
-
-    def direction_state(self, right, left, up, down):
-        self.right = right
-        self.left = left
-        self.up = up
-        self.down = down
+        return is_alive
