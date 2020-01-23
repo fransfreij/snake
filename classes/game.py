@@ -7,40 +7,17 @@ from classes.apple import Apple
 
 class Game:
     def __init__(self, running):
+        pygame.init()
         self.running = running
-        self.spawn_timer = 5
-        self.counter = 0
+        self.window_size_x = 500
+        self.window_size_y = 500
+        self.next_direction = "RIGHT"
         self.apples = []
 
     def create_window(self):
-        try:
-            self.window = pygame.display.set_mode(
-                [constants['HEIGHT'], constants['WIDTH']])
-        except:
-            print("Failed to create window...")
-
-    def update_window(self):
-        try:
-            pygame.display.update()
-        except:
-            print("Failed to update window...")
-
-    def create_clock(self):
-        try:
-            self.clock = pygame.time.Clock()
-        except:
-            print("Failed to create clock...")
-
-    def on_event(self, event):
-        if event.type == pygame.QUIT:
-            self.quit()
-            print("User manually exited the game...")
-
-        self.snake.on_event(event)
-
-    def create_snake(self):
-        self.snake = Snake()
-        self.snake.create_snake()
+        pygame.display.set_caption("Snake")
+        self.window = pygame.display.set_mode(
+            (self.window_size_x, self.window_size_y))
 
     def create_apple(self):
         apple = Apple()
@@ -48,46 +25,32 @@ class Game:
         self.apples.append(apple)
 
     def run(self):
-        self.create_clock()
+        clock = pygame.time.Clock()
         self.create_window()
-
-        self.create_snake()
-        self.create_apple()
+        self.snake = Snake()
 
         while self.running:
             for event in pygame.event.get():
-                self.on_event(event)
+                if event.type == pygame.QUIT:
+                    pygame.quit()
 
-            self.clock.tick(constants['FPS'])
-            self.window.fill(constants['BLACK'])
+                self.snake.on_event(event)
 
-            # collisions
+            if len(self.apples) <= 0:
+                self.create_apple()
+
+            print(self.snake.get_pos_x())
+
             for apple in self.apples:
-                if self.snake.on_collide(apple):
-                    self.apples.remove(apple)
-                    self.snake.increase_size()
+                if self.snake.get_pos_x() == apple.get_pos_x() and self.snake.get_pos_y() == apple.get_pos_y():
 
-            # draw
+                    print("hit")
+                    self.apples.remove(apple)
+
+            self.snake.update()
             self.snake.draw(self.window)
             for apple in self.apples:
                 apple.draw(self.window)
 
-            # check if snake is alive
-            if not self.snake.is_alive():
-                print("Game over")
-                self.quit()
-
-            # spawn timer logic
-            if pygame.time.get_ticks() / 1000 >= self.spawn_timer:
-                self.create_apple()
-                self.spawn_timer += 5
-                self.counter += 1
-            # print(pygame.time.get_ticks() / 1000)
-
-            # updates
-            self.snake.update()
-            self.update_window()
-
-    def quit(self):
-        self.running = False
-        pygame.quit()
+            pygame.display.update()
+            clock.tick(60)

@@ -10,49 +10,69 @@ DOWN = "DOWN"
 
 
 class Snake:
-    def __init__(self, x, y):
-        self.start_x = x
-        self.start_y = y
+    def __init__(self):
+        self.next_direction = None
+        self.direction = "RIGHT"
+        self.snake_pos = [100, 50]  # x y
+        self.snake_body = [[100, 50], [100-10, 50], [100-(2*10), 50]]
         self.snake_list = []
-        self.is_alive = True
-        self.reset()
+        self.score = 0
 
-    def draw(self, window):
-        for snake in self.snake_list:
-            pygame.draw.rect(window, constants['GREEN'], snake)
+    def on_event(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                self.next_direction = "UP"
+            if event.key == pygame.K_DOWN:
+                self.next_direction = "DOWN"
+            if event.key == pygame.K_LEFT:
+                self.next_direction = "LEFT"
+            if event.key == pygame.K_RIGHT:
+                self.next_direction = "RIGHT"
 
-    def reset(self):
-        self.snake_list = []
-        self.direction = 'LEFT'
+    def update(self):
 
-        for i in range(0, 4):
-            self.snake_list.append((self.start_x, self.start_y + i))
+        if self.next_direction == 'UP' and self.direction != 'DOWN':
+            self.direction = 'UP'
 
-    def change_direction(self, direction):
-        if self.direction == "UP" and direction == "DOWN":
-            return
+        if self.next_direction == 'DOWN' and self.direction != 'UP':
+            self.direction = 'DOWN'
 
-        if self.direction == "DOWN" and direction == "UP":
-            return
+        if self.next_direction == 'LEFT' and self.direction != 'RIGHT':
+            self.direction = 'LEFT'
 
-        if self.direction == "LEFT" and direction == "RIGHT":
-            return
+        if self.next_direction == 'RIGHT' and self.direction != 'LEFT':
+            self.direction = 'RIGHT'
 
-        if self.direction == "RIGHT" and direction == "LEFT":
-            return
+        if self.direction == 'UP':
+            self.snake_pos[1] -= 5
 
-        self.direction = direction
+        if self.direction == 'DOWN':
+            self.snake_pos[1] += 5
 
-    def get_head(self):
-        return self.snake_list[0]
+        if self.direction == 'LEFT':
+            self.snake_pos[0] -= 5
 
-    def get_tail(self):
-        return self.snake_list[len(self.snake_list)-1]
+        if self.direction == 'RIGHT':
+            self.snake_pos[0] += 5
+
+        self.snake_body.insert(0, list(self.snake_pos))
+
+        self.delete_tail()
+        # print(len(self.snake_body))
 
     def grow(self):
-        (tx, ty) = self.get_tail()
-        tail = ()
-        print(tail)
+        pass
 
-    def is_alive(self):
-        return is_alive
+    def delete_tail(self):
+        self.snake_body.pop()
+
+    def draw(self, window):
+        for pos in self.snake_body:
+            pygame.draw.rect(window, constants['GREEN'], pygame.Rect(
+                pos[0], pos[1], 10, 10))
+
+    def get_pos_x(self):
+        return self.snake_pos[0]
+
+    def get_pos_y(self):
+        return self.snake_pos[1]

@@ -43,3 +43,9 @@ class Apple:
 
     def get_rect(self):
         return self.apple
+
+    def get_pos_x(self):
+        return self.apple.x
+
+    def get_pos_y(self):
+        return self.apple.y
