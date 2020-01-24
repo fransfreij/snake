@@ -65,6 +65,10 @@ class Snake:
                 self.alive = False
             self.snake_pos[0] += 5
 
+        # here we can check if the body collide with itself
+        for i in range(len(self.snake_body)):
+            pass
+
     def grow(self):
         self.snake_body.insert(0, list(self.snake_pos))
 
