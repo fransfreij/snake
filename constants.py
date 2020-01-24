@@ -8,6 +8,6 @@ constants = {
     'WHITE': (255, 255, 255),
     'GREEN': (127, 255, 0),
     'RED': (255, 0, 0),
-    'HEIGHT': 500,
-    'WIDTH': 500
+    'GAME_HEIGHT': 500,
+    'GAME_WIDTH': 500
 }

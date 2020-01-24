@@ -1,30 +1,21 @@
-"""
-Apple will be eaten by snake and spawn at random locations
-"""
+#!/usr/bin/env python
 
 import pygame
 import random
 from constants import *
 
 
-print(constants['WIDTH'])
-
-
 class Apple:
     def __init__(self):
-        self.alive = False
         self.apple_size = 10
 
     def random_position(self):
         pos = []  # clean the pos
-        x = random.randint(0, constants['WIDTH'])
-        y = random.randint(0, constants['HEIGHT'])
+        x = random.randint(0, constants['GAME_WIDTH'])
+        y = random.randint(0, constants['GAME_HEIGHT'])
         pos.append(x)
         pos.append(y)
         return pos
-
-    def on_collide(self):
-        pass
 
     def create_apple(self):
         pos = self.random_position()
@@ -33,13 +24,7 @@ class Apple:
         self.alive = True
 
     def draw(self, window):
-        if not self.apple:
-            print("no apple object")
-
         pygame.draw.rect(window, constants['RED'], self.apple)
-
-    def is_alive(self):
-        return self.alive
 
     def get_rect(self):
         return self.apple

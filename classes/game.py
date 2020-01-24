@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import pygame
 from constants import *
 from classes.snake import Snake
@@ -9,15 +10,13 @@ class Game:
     def __init__(self, running):
         pygame.init()
         self.running = running
-        self.window_size_x = 500
-        self.window_size_y = 500
-        self.next_direction = "RIGHT"
         self.apples = []
+        self.font = pygame.font.Font('fonts/arial.ttf', 32)
 
     def create_window(self):
         pygame.display.set_caption("Snake")
         self.window = pygame.display.set_mode(
-            (self.window_size_x, self.window_size_y))
+            (constants['GAME_WIDTH'], constants['GAME_HEIGHT']))
 
     def create_apple(self):
         apple = Apple()
@@ -29,28 +28,39 @@ class Game:
         self.create_window()
         self.snake = Snake()
 
+        # game loop
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                    self.running = False
 
                 self.snake.on_event(event)
 
+            # we always want a apple on the screen
             if len(self.apples) <= 0:
                 self.create_apple()
 
-            print(self.snake.get_pos_x())
+            # grow the snake
+            self.snake.grow()
 
+            # collision detection
             for apple in self.apples:
-                if self.snake.get_pos_x() == apple.get_pos_x() and self.snake.get_pos_y() == apple.get_pos_y():
-
-                    print("hit")
+                if apple.get_rect().colliderect(self.snake.get_rect()):
                     self.apples.remove(apple)
+                    self.snake.increase_score()
+                else:
+                    self.snake.delete_tail()
 
+            # update the snake movement direction
             self.snake.update()
+
+            # drawables
+            self.window.fill(constants['BLACK'])
             self.snake.draw(self.window)
             for apple in self.apples:
                 apple.draw(self.window)
 
+            # update and fps
             pygame.display.update()
             clock.tick(60)
