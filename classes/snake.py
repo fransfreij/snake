@@ -73,8 +73,7 @@ class Snake:
 
     def draw(self, window):
         for pos in self.snake_body:
-            pygame.draw.rect(window, constants['GREEN'], pygame.Rect(
-                pos[0], pos[1], 10, 10))
+            pygame.draw.rect(window, constants['GREEN'], pygame.Rect(pos[0], pos[1], 10, 10))
 
     def get_pos_x(self):
         return self.snake_pos[0]
@@ -83,9 +82,7 @@ class Snake:
         return self.snake_pos[1]
 
     def get_rect(self):
-        head = pygame.Rect(
-            int(self.snake_pos[0]), int(self.snake_pos[1]), 10, 10)
-
+        head = pygame.Rect(int(self.snake_pos[0]), int(self.snake_pos[1]), 10, 10)
         return head
 
     def increase_score(self):

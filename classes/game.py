@@ -15,8 +15,7 @@ class Game:
 
     def create_window(self):
         pygame.display.set_caption("Snake")
-        self.window = pygame.display.set_mode(
-            (constants['GAME_WIDTH'], constants['GAME_HEIGHT']))
+        self.window = pygame.display.set_mode((constants['GAME_WIDTH'], constants['GAME_HEIGHT']))
 
     def create_apple(self):
         apple = Apple()
