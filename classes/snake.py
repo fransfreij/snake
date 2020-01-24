@@ -16,6 +16,7 @@ class Snake:
         self.snake_pos = [100, 50]  # x y
         self.snake_body = [[100, 50], [100-10, 50], [100-(2*10), 50]]
         self.score = 0
+        self.alive = True
 
     def on_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -45,22 +46,29 @@ class Snake:
             self.direction = 'RIGHT'
 
         if self.direction == 'UP':
+            if self.snake_pos[1] < 0:
+                self.alive = False
             self.snake_pos[1] -= 5
 
         if self.direction == 'DOWN':
+            if self.snake_pos[1] > constants['GAME_HEIGHT'] - 10:
+                self.alive = False
             self.snake_pos[1] += 5
 
         if self.direction == 'LEFT':
+            if self.snake_pos[0] < 0:
+                self.alive = False
             self.snake_pos[0] -= 5
 
         if self.direction == 'RIGHT':
+            if self.snake_pos[0] > constants['GAME_WIDTH'] - 10:
+                self.alive = False
             self.snake_pos[0] += 5
 
     def grow(self):
         self.snake_body.insert(0, list(self.snake_pos))
 
-    def delete_tail(self):
-        # remove the last element of the tail
+    def shrink(self):
         self.snake_body.pop()
 
     def draw(self, window):
@@ -85,3 +93,6 @@ class Snake:
 
     def get_score(self):
         return self.score
+
+    def get_alive_status(self):
+        return self.alive

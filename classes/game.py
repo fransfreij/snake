@@ -50,10 +50,14 @@ class Game:
                     self.apples.remove(apple)
                     self.snake.increase_score()
                 else:
-                    self.snake.delete_tail()
+                    self.snake.shrink()
 
             # update the snake movement direction
             self.snake.update()
+
+            # if snake is not alive, quit the game
+            if self.snake.get_alive_status() is False:
+                self.running = False
 
             # drawables
             self.window.fill(constants['BLACK'])
