@@ -4,6 +4,7 @@ import pygame
 from constants import *
 from classes.snake import Snake
 from classes.apple import Apple
+from classes.textmanager import Textmanager
 
 
 class Game:
@@ -11,7 +12,6 @@ class Game:
         pygame.init()
         self.running = running
         self.apples = []
-        self.font = pygame.font.Font('fonts/arial.ttf', 32)
 
     def create_window(self):
         pygame.display.set_caption("Snake")
@@ -22,16 +22,22 @@ class Game:
         apple.create_apple()
         self.apples.append(apple)
 
+    def create_snake(self):
+        self.snake = Snake()
+
+    def create_textmanager(self):
+        self.textmanager = Textmanager()
+
     def run(self):
         clock = pygame.time.Clock()
         self.create_window()
-        self.snake = Snake()
+        self.create_snake()
+        self.create_textmanager()
 
         # game loop
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
                     self.running = False
 
                 self.snake.on_event(event)
@@ -58,9 +64,13 @@ class Game:
             if self.snake.get_alive_status() is False:
                 self.running = False
 
+            # render score and it's x, y position
+            self.textmanager.render_text(self.snake.get_score(), (constants['GAME_WIDTH'] - 40), 0)
+
             # drawables
             self.window.fill(constants['BLACK'])
             self.snake.draw(self.window)
+            self.textmanager.draw(self.window)
             for apple in self.apples:
                 apple.draw(self.window)
 

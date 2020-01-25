@@ -12,7 +12,7 @@ class Apple:
     def random_position(self):
         pos = []  # clean the pos
         x = random.randint((0 + self.apple_size + 5), (constants['GAME_WIDTH'] - (self.apple_size - 5)))
-        y = random.randint((0 + self.apple_size + 5), (constants['GAME_HEIGHT'] - (self.apple_size - 5)))
+        y = random.randint((0 + self.apple_size + 5), (constants['GAME_HEIGHT'] - (self.apple_size + 5)))
         pos.append(x)
         pos.append(y)
         return pos

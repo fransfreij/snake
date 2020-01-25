@@ -32,6 +32,9 @@ class Snake:
             if event.key == pygame.K_RIGHT:
                 self.next_direction = "RIGHT"
 
+            if event.key == pygame.K_ESCAPE:
+                self.alive = False
+
     def update(self):
         if self.next_direction == 'UP' and self.direction != 'DOWN':
             self.direction = 'UP'
